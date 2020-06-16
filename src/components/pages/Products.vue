@@ -48,17 +48,17 @@
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="image">輸入圖片網址</label>
-                  <input type="text" class="form-control" id="image" placeholder="請輸入圖片連結" />
+                  <input type="text" class="form-control" id="image" placeholder="請輸入圖片連結" v-model='tempProduct.image' />
                 </div>
                 <div class="form-group">
                   <label for="customFile">
                     或 上傳圖片
                     <i class="fas fa-spinner fa-spin"></i>
                   </label>
-                  <input type="file" id="customFile" class="form-control" ref="files" />
+                  <input type="file" id="customFile" class="form-control" ref="files" @change='uploadFile'/>
                 </div>
                 <img
-                  img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
+                  :src="tempProduct.image"
                   class="img-fluid"
                   alt
                 />
@@ -178,7 +178,6 @@ export default {
                            //避免使用同一個參考, 把變數寫到空的物件裡使用
         this.isNew = false;
       }
-      
     },
     updateProduct(){
       let api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
@@ -197,6 +196,26 @@ export default {
           console.log('更新失敗');
         }
       });
+    },
+    uploadFile(){
+      const vm = this;
+      const currentFile = this.$refs.files.files[0];
+      const formData = new FormData();
+      formData.append('file-to-upload', currentFile);
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;
+      this.$http.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((response) => {
+        if(response.data.success){
+          // vm.tempProduct.imageUrl = response.data.imageUrl;
+          // 用上面這個方法會無法完成正確綁定
+          console.log(response.data);
+          vm.$set(vm.tempProduct, 'image', response.data.imageUrl)
+        }
+        console.log(vm);
+      })
     }
   },
   created() {
