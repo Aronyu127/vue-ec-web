@@ -19,8 +19,9 @@
           <td>{{ item.title }}</td>
           <td class="text-right" width="120">{{ item.origin_price }}</td>
           <td class="text-right" width="120">{{ item.price }}</td>
-          <td width="80">
+          <td width="120">
             <button class="btn btn-outline-primary btn-sm" @click='openModal(false, item)'>編輯</button>
+            <button class="btn btn-outline-danger btn-sm" @click='deleteProduct(item)'>刪除</button>
           </td>
         </tr>
       </tbody>
@@ -215,6 +216,19 @@ export default {
           vm.$set(vm.tempProduct, 'image', response.data.imageUrl)
         }
         console.log(vm);
+      })
+    },
+    deleteProduct(item){
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${item.id}`;
+      const vm = this;
+      this.$http.delete(api).then(response => {
+        console.log(response.data)
+        if(response.data.success){
+          console.log(response.data)
+          vm.getProducts()
+        }else{
+          console.log('刪除失敗');
+        }
       })
     }
   },
