@@ -28,6 +28,7 @@
         </tr>
       </tbody>
     </table>
+    <Pagination :pagination='pagination' @triggerGetProducts='getProducts'/>
     <div
       class="modal fade"
       id="productModal"
@@ -153,10 +154,13 @@
 
 <script>
 import $ from "jquery";
+import Pagination from '../Pagination'
+
 export default {
   data() {
     return {
       products: [],
+      pagination: {},
       tempProduct: {},
       isNew: false,
       isLoading: false,
@@ -166,12 +170,13 @@ export default {
     };
   },
   methods: {
-    getProducts() {
-      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products`;
+    getProducts(page = 1) {
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${page}`;
       const vm = this;
       vm.isLoading = true;
       this.$http.get(api).then(response => {
         vm.products = response.data.products;
+        vm.pagination = response.data.pagination;
         vm.isLoading = false;  
       });
     },
@@ -245,6 +250,9 @@ export default {
   },
   created() {
     this.getProducts();
+  },
+  components: {
+    Pagination
   }
 };
 </script>
