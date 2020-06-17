@@ -171,8 +171,6 @@ export default {
       const vm = this;
       vm.isLoading = true;
       this.$http.get(api).then(response => {
-        console.log(api);
-        console.log(response.data.products);
         vm.products = response.data.products;
         vm.isLoading = false;  
       });
@@ -203,7 +201,7 @@ export default {
           $("#productModal").modal("hide");
           vm.getProducts();
         }else{
-          console.log('更新失敗');
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
         }
         vm.isLoading = false;
       });
@@ -220,13 +218,14 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }).then((response) => {
+        console.log(response.data);
         if(response.data.success){
           // vm.tempProduct.imageUrl = response.data.imageUrl;
           // 用上面這個方法會無法完成正確綁定
-          console.log(response.data);
           vm.$set(vm.tempProduct, 'image', response.data.imageUrl)
+        }else {
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
         }
-        console.log(vm);
         vm.status.fileUploading = false;
       })
     },
@@ -239,7 +238,7 @@ export default {
           console.log(response.data)
           vm.getProducts()
         }else{
-          console.log('刪除失敗');
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
         }
       })
     }
