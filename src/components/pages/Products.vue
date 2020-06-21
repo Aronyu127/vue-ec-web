@@ -19,8 +19,8 @@
         <tr v-for="(item) in products" :key="item.id">
           <td width="120">{{ item.category }}</td>
           <td>{{ item.title }}</td>
-          <td class="text-right" width="120">{{ item.origin_price }}</td>
-          <td class="text-right" width="120">{{ item.price }}</td>
+          <td class="text-right" width="120">{{ item.origin_price | currency }}</td>
+          <td class="text-right" width="120">{{ item.price | currency }}</td>
           <td width="120">
             <button class="btn btn-outline-primary btn-sm" @click='openModal(false, item)'>編輯</button>
             <button class="btn btn-outline-danger btn-sm" @click='deleteProduct(item)'>刪除</button>
