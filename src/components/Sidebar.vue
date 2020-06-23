@@ -50,7 +50,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <router-link :to='admin/products' class="nav-link" href="#">
+            <router-link to='admin/products' class="nav-link" href="#">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -97,7 +97,7 @@
         </h6>
         <ul class="nav flex-column mb-2">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" to="/customer_order">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -117,7 +117,7 @@
                 <polyline points="10 9 9 9 8 9" />
               </svg>
               Fake order
-            </a>
+            </router-link>
           </li>
         </ul>
       </div>

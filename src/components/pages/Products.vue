@@ -1,7 +1,6 @@
 <template>
   <div>
-    <loading :active.sync="isLoading">
-    </loading>
+    <loading :active.sync="isLoading"></loading>
     <div class="text-right">
       <button class="btn btn-primary mt-4" @click="openModal(true)">建立新產品</button>
     </div>
