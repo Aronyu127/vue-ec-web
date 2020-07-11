@@ -27,7 +27,7 @@
         </tr>
       </tbody>
     </table>
-    <Pagination :pagination='pagination' @triggerGetProducts='getProducts'/>
+    <Pagination :pagination='pagination' @triggerGetObjects='getProducts'/>
     <div
       class="modal fade"
       id="productModal"
