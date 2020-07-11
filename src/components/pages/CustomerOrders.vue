@@ -29,7 +29,7 @@
               <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id "></i>
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
+            <button type="button" class="btn btn-outline-danger btn-sm ml-auto" @click='addToCart(item.id)'>
               <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
               加到購物車
             </button>
@@ -66,7 +66,9 @@
               <div class="h5" v-if="product.price">現在只要 {{ product.price }}</div>
             </div>
             <select name="" class="form-control mt-3" v-model="product.num">
-              <option value="1">選購一件</option>
+              <option :value="num" v-for='num in 10' :key='num'>
+                選購 {{num}} {{product.unit}}
+              </option>
             </select>
           </div>
           <div class="modal-footer">
@@ -74,25 +76,28 @@
               小計
               <strong>{{ product.num * product.price }}</strong>元
             </div>
-            <button type="button" class="btn btn-primary">
-              <!-- <i class="fas fa-spinner fa-spin" v-if="product.id === status.loadingItem"></i> -->
+            <button type="button" class="btn btn-primary" @click='addToCart(product.id, product.num)'>
+              <i class="fas fa-spinner fa-spin" v-if="product.id === status.loadingItem" ></i>
               加到購物車
             </button>
           </div>
         </div>
       </div>
     </div>
+    <Cart :cart-data='cartData'></Cart>
   </div>
 </template>
 
 <script>
 import $ from "jquery";
+import Cart from '../Cart'
 
 export default {
   data() {
     return {
       products: [],
       product: {},
+      cartData: {},
       status: {
         loadingItem: ""
       },
@@ -120,10 +125,39 @@ export default {
         $("#productModal").modal("show");
         vm.status.loadingItem = "";
       });
+    },
+    getCart(){
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      const vm = this;
+      vm.isLoading = true;
+      this.$http.get(api).then(response => {
+        console.log(response);
+        vm.cartData = response.data.data;
+        vm.isLoading = false;
+      });
+    },
+    addToCart(id, qty = 1){
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      const vm = this;
+      const cart = {
+        product_id: id,
+        qty
+      }
+      vm.status.loadingItem = id;
+      this.$http.post(api, { data: cart}).then(response => {
+        console.log(response);
+        $("#productModal").modal("hide");
+        vm.status.loadingItem = "";
+      });
+      vm.getCart();
     }
   },
   created() {
     this.getProducts();
+    this.getCart();
+  },
+  components: {
+    Cart
   }
 };
 </script>
