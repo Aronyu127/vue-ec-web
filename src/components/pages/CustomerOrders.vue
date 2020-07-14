@@ -84,7 +84,7 @@
         </div>
       </div>
     </div>
-    <Cart :cart-data='cartData'></Cart>
+    <Cart :cart-data='cartData' @getCart='getCart'></Cart>
   </div>
 </template>
 
