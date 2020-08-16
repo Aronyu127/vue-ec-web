@@ -7,15 +7,36 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import 'bootstrap';
 
+import { ValidationProvider } from 'vee-validate';
+import { ValidationObserver } from 'vee-validate';
+import zh from 'vee-validate/dist/locale/zh_TW.json';
+localize({
+  zh: {
+    names: {
+      email: '電子信箱',
+      name: '姓名',
+      address: '地址'
+    }
+  }
+});
+import { localize } from 'vee-validate';
+localize('zh', zh);
+import { extend } from 'vee-validate';
+import { required, email } from 'vee-validate/dist/rules';
+extend('required', required);
+extend('email', email);
+
 import App from './App';
 import router from './router';
 import './bus';
 import currencyFilter from './filters/currency'
 
 Vue.config.productionTip = false
-Vue.use(VueAxios, axios)
+Vue.use(VueAxios, axios);
 axios.defaults.withCredentials = true;
 
+Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('Loading', Loading);
 Vue.filter('currency', currencyFilter);
 
