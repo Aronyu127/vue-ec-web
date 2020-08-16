@@ -65,10 +65,8 @@
               <del class="h6" v-if="product.price">原價 {{ product.origin_price }}</del>
               <div class="h5" v-if="product.price">現在只要 {{ product.price }}</div>
             </div>
-            <select name="" class="form-control mt-3" v-model="product.num">
-              <option :value="num" v-for='num in 10' :key='num'>
-                選購 {{num}} {{product.unit}}
-              </option>
+            <select name class="form-control mt-3" v-model="product.num">
+              <option :value="num" v-for="num in 10" :key="num">選購 {{num}} {{product.unit}}</option>
             </select>
           </div>
           <div class="modal-footer">
@@ -76,21 +74,26 @@
               小計
               <strong>{{ product.num * product.price }}</strong>元
             </div>
-            <button type="button" class="btn btn-primary" @click='addToCart(product.id, product.num)'>
-              <i class="fas fa-spinner fa-spin" v-if="product.id === status.loadingItem" ></i>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="addToCart(product.id, product.num)"
+            >
+              <i class="fas fa-spinner fa-spin" v-if="product.id === status.loadingItem"></i>
               加到購物車
             </button>
           </div>
         </div>
       </div>
     </div>
-    <Cart :cart-data='cartData' @getCart='getCart'></Cart>
+    <Cart :cart-data="cartData" @getCart="getCart"></Cart>
+
   </div>
 </template>
 
 <script>
 import $ from "jquery";
-import Cart from '../Cart'
+import Cart from "../Cart";
 
 export default {
   data() {
@@ -98,10 +101,20 @@ export default {
       products: [],
       product: {},
       cartData: {},
+      form: {
+        user: {
+          name: "",
+          email: "",
+          tel: "",
+          address: ""
+        },
+        message: ""
+      },
       status: {
         loadingItem: ""
       },
-      isLoading: false
+      isLoading: false,
+      value: ""
     };
   },
   methods: {
@@ -111,7 +124,7 @@ export default {
       vm.isLoading = true;
       this.$http.get(api).then(response => {
         vm.products = response.data.products;
-        // vm.pagination = response.data.pagination;
+        vm.pagination = response.data.pagination;
         vm.isLoading = false;
       });
     },
@@ -126,7 +139,7 @@ export default {
         vm.status.loadingItem = "";
       });
     },
-    getCart(){
+    getCart() {
       const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       const vm = this;
       vm.isLoading = true;
@@ -136,18 +149,28 @@ export default {
         vm.isLoading = false;
       });
     },
-    addToCart(id, qty = 1){
+    addToCart(id, qty = 1) {
       const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       const vm = this;
       const cart = {
         product_id: id,
         qty
-      }
+      };
       vm.status.loadingItem = id;
-      this.$http.post(api, { data: cart}).then(response => {
+      this.$http.post(api, { data: cart }).then(response => {
         console.log(response);
         $("#productModal").modal("hide");
         vm.status.loadingItem = "";
+      });
+      vm.getCart();
+    },
+    createOrder() {
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
+      const vm = this;
+      vm.isLoading = true;
+      this.$http.post(api, { data: vm.form }).then(response => {
+        console.log(response);
+        vm.isLoading = false;
       });
       vm.getCart();
     }
