@@ -15,10 +15,10 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link to='/admin/orders' class="nav-link" href="#">
               <i class='fas fa-box'></i>
               Orders
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
             <router-link to='/admin/coupons' class="nav-link" href="#">
