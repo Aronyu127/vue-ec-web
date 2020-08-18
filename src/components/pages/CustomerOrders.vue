@@ -252,6 +252,9 @@ export default {
       const vm = this;
       vm.isLoading = true;
       this.$http.post(api, { data: vm.form }).then(response => {
+        if(response.data.success){
+          vm.$router.push(`/customer_checkout/${response.data.orderId}`);
+        }
         console.log(response);
         vm.isLoading = false;
       });
